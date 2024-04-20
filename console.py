@@ -2,6 +2,7 @@
 """ Console Module """
 import cmd
 import sys
+import models
 from models.base_model import BaseModel
 from models.__init__ import storage
 from models.user import User
@@ -114,37 +115,34 @@ class HBNBCommand(cmd.Cmd):
         """ Overrides the emptyline method of CMD """
         pass
 
-    def do_create(self, args):
+    def do_create(self, arg):
         """ Create ans object of any class"""
-        if not args:
+        if not arg:
             print("** class name missing **")
             return
-        elif args.split()[0] not in HBNBCommand.classes:
+        args = arg.split()
+        class_name = args[0]
+        if not self.classes.get(class_name):
             print("** class doesn't exist **")
             return
-        class_name, *params = args.split()
-        params_dict = {}
-        for par in params:
-            if "=" not in par:
-                continue
+        kwargs = {}
+        for par in args[1:]:
             key, value = par.split("=")
-            key = key.replace("_", " ")
-            if value.startswith('"') and value.endswith('"'):
-                value = value[1:-1].replace('\\"', '"')
-                if "." in value:
-                    try:
-                        value = float(value)
-                    except ValueError:
+            value = value.replace('_', ' ')
+            try:
+                value = int(value)
+            except ValueError:
+                try:
+                    value = float(value)
+                except ValueError:
+                    if value.startswith('"') and value.endswith('"'):
+                        value = value[1:-1].replace('\\"', '"')
+                    else:
                         continue
-                else:
-                    try:
-                        value = int(value)
-                    except ValueError:
-                        continue
-            params_dict[key] = value
-        new_instance = HBNBCommand.classes[class_name](**params_dict)
-        storage.save()
-        print(new_instance.id)
+        kwargs[key] = value
+        instance = self.classes[class_name](**kwargs)
+        instance.save()
+        print(instance.id)
 
     def help_create(self):
         """ Help information for the create method """
@@ -220,18 +218,17 @@ class HBNBCommand(cmd.Cmd):
     def do_all(self, args):
         """ Shows all objects, or all objects of a class"""
         print_list = []
-
+        objects = None
         if args:
             args = args.split(' ')[0]  # remove possible trailing args
             if args not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
-            for k, v in storage._FileStorage__objects.items():
-                if k.split('.')[0] == args:
-                    print_list.append(str(v))
+            objects = storage.all(args)
         else:
-            for k, v in storage._FileStorage__objects.items():
-                print_list.append(str(v))
+            objects = storage.all()
+        for obj in objects.values():
+            print_list.append(str(obj))
 
         print(print_list)
 
