@@ -18,11 +18,11 @@ class FileStorage:
     def all(self, cls=None):
         """Returns a list of objects of one type of class"""
         if cls is not None:
-            if type(cls) == str:
+            if isinstance(cls, str):
                 cls = eval(cls)
             cls_dict = {}
             for k, v in self.__objects.items():
-                if type(v) == cls:
+                if isinstance(v, cls):
                     cls_dict[k] = v
             return cls_dict
         return self.__objects
