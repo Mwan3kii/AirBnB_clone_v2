@@ -1,9 +1,10 @@
 #!/usr/bin/python3
-"""generates a .tgz archive from web_static folder of AirBnB repo using do pack"""
-
+"""generates a .tgz archive from web_static folder of AirBnB using do pack"""
 from fabric.api import local
 from datetime import datetime
 import os
+
+
 def do_pack():
     """Returns path to the created archive"""
     if not os.path.exists("versions"):
