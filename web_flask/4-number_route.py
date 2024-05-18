@@ -32,7 +32,7 @@ def python_text(text):
 @app.route('/number/<int:n>', strict_slashes=False)
 def num_n(n):
     """Display if n is an interger"""
-    return f"{n} is number"
+    return f"{n} is a number"
 
 
 if __name__ == '__main__':
