@@ -18,8 +18,21 @@ def hbnb():
 
 @app.route('/c/<text>', strict_slashes=False)
 def c_text(text):
-    """Display c then text var replacing _ with space"""
+    """Display string c then text var replacing _ with space"""
     return "C " + str(text.replace('_', ' '))
+
+
+@app.route('/python/', defaults={'text': 'is cool'}, strict_slashes=False)
+@app.route('/python/<text>', strict_slashes=False)
+def python_text(text):
+    """Displays python then text var replacing _ with space"""
+    return "Python " + text.replace('_', ' ')
+
+
+@app.route('/number/<int:n>', strict_slashes=False)
+def num_n(n):
+    """Display if n is an interger"""
+    return f"{n} is number"
 
 
 if __name__ == '__main__':
