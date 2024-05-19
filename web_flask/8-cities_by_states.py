@@ -10,7 +10,6 @@ app = Flask(__name__)
 def cities_by_states():
     """Displays cities by their states with city id and name"""
     states = storage.all(State).values()
-    states = sorted(states, key=lambda state: state.name)
     return render_template('8-cities_by_states.html', states=states)
 
 
